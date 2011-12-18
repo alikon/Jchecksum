@@ -1,0 +1,4 @@
+README file
+This Joomla Plaftorm CLI application execute a checksum of your site folders checking for unwanted changes on your files
+
+Put The checksum folder in the cli folder if you don't have one create it on your joomlasite root

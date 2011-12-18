@@ -2,3 +2,17 @@ README file
 This Joomla Plaftorm CLI application execute a checksum of your site folders checking for unwanted changes on your files
 
 Put The checksum folder in the cli folder if you don't have one create it on your joomlasite root
+Rename the file bootstrap.dist.php to bootstrap.php and change to suit your environment.
+
+this is the correct situation
+Yuorjoomlaasiteroot:
+                   -cli           folder
+                   -cli\checksumm folder
+                   ...
+                   yoursite  folders and files
+                   ...
+                   bootstrap.php
+
+
+Run from the command line or terminal.
+All you need is PHP configured to run from the command line.    
