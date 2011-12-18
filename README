@@ -1,6 +1,7 @@
 README file
-This Joomla Plaftorm CLI application takes a fingerprint of your site helping you to detect changes dued to hacking attempts
-Execute a checksum via md5 of your site folders checking for unwanted changes on your files.
+This Joomla Plaftorm CLI application takes a fingerprint of your site helping you to detect changes dued to 
+hacking attempts, it execute a checksum, using the md5 function, of your site folders checking for unwanted 
+changes on your files.
 
 Settings:
 Put The checksum folder in the cli folder if you don't have one create it on your joomlasite root
