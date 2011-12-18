@@ -1,7 +1,7 @@
 #!/usr/bin/php 
 <?php 
 /** 
-* An example command line application built on the Joomla Platform. 
+* An Checksum command line application built on the Joomla Platform. 
 * 
 * To run this example, adjust the executable path above to suite your operating system, 
 * make this file executable and run the file. 
