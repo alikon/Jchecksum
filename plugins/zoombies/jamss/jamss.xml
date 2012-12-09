@@ -23,7 +23,7 @@
 			
                 <field name="last_run" type="hidden" default="1352101719" label="Admin advise" description="Send email to Admin on spam ">
                 </field>
-        <field name="tables" type="sql" default="*" multiple="true" label="Select a table" query="SELECT table_name, table_type, engine FROM information_schema.tables WHERE table_schema = 'joomladdons'" key_field="table_name" value_field="table_name"/>        
+         <field name="file_manager_path" type="folderlist" default="JPATH_ROOT" label="COM_SECURITYCHECK_CONFIG_FILE_MANAGER_PATH_LABEL" description="COM_SECURITYCHECK_CONFIG_FILE_MANAGER_PATH_DESCRIPTION" directory="" filter="" exclude="" stripext="" hide_none="true"/>
 				<field name="interval" type="list" default="60" label="INTerval" >			
 				<option value="5" > 5 min</option>
 				<option value="10" >10 min</option>
@@ -40,7 +40,8 @@
                 <field name="deepscan" type="radio" default="1" label="DeepScan" description="Set deepscan">
                     <option value="1">YES</option>
                     <option value="0">NO</option>
-                </field>			                    
+                </field>	
+        <field name="key" type="text" default="" label="PLG_webcron_KEY_LABEL" description="PLG_webcron_KEY_DESC" />          		                    
             </fieldset>			
         </fields>
     </config>

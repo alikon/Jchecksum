@@ -172,8 +172,8 @@ class plgCronJamss extends JPlugin {
         define('JOOMLA_SEARCH', TRUE); // should script verify valid Joomla! dir ?
                                        // set to FALSE if you use it on non-Joomla site
         
-       
-        $this->get_filelist(JPATH_ROOT);
+       $files= $this->params->get('file_manager_path',JPATH_ROOT);
+        $this->get_filelist($files);
        
          JLog::add (JText::sprintf('DETECTOR_CRON_PROCESS_USERCOMPLETE', round(microtime(true) - $jtime, 3)));
     }
