@@ -42,7 +42,8 @@
                     <option value="1">First</option>
                     <option value="2">Check</option>
                     <option value="3">Update</option>
-                </field>				                    
+                </field>	
+            <field name="key" type="text" default="" label="PLG_webcron_KEY_LABEL" description="PLG_webcron_KEY_DESC" />    			                    
             </fieldset>			
         </fields>
     </config>

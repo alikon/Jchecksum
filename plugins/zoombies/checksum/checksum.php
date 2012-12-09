@@ -56,7 +56,8 @@ class plgCronChecksum extends JPlugin {
 
     function doCronchecksum($time) {
     	
-      
+        
+       
     	  /*
     	 	$user = JFactory::getUser();
     	 //	var_dump($user->get('guest'));
@@ -76,11 +77,8 @@ class plgCronChecksum extends JPlugin {
             // Add a start message.
         
             JLog::add('Start job: CronChecksum.');
-            if(php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR'])) {
-                JLog::add('job from CLI: CronChecksum.');
-            } else {
-               JLog::add('job from WEB: CronChecksum.');
-            }    
+          
+            
              $this->dbo = JFactory::getDBO();
             $this->_checksum($time);            
              $this->ins_db_run(); 
@@ -92,7 +90,17 @@ class plgCronChecksum extends JPlugin {
 	private function _checksum($lastrun) {
     	 $jtime = microtime(true);
     	 		$files= $this->params->get('file_manager_path',JPATH_ROOT);
-          $dir=JPATH_SITE; 
+          //$dir=JPATH_SITE; 
+          //$dir=$this->params->get('file_manager_path',JPATH_ROOT); 
+          
+          
+       $file_check_path = $this->params->get('file_manager_path',JPATH_ROOT);	
+	     if ( ($file_check_path == "JPATH_ROOT") || ($file_check_path == JPATH_ROOT) ) {
+		     $file_check_path = JPATH_ROOT;
+	     } else {
+		     $file_check_path = JPATH_ROOT .DS . $file_check_path;
+	     }
+       $dir=$file_check_path;    	
 		  $para=$this->params->get('mode','2');
        #file for storing fingerprints, should be writeable in case of fingerprints update 
        $file = JPATH_SITE."/cli/checksum/fingerprints"; 

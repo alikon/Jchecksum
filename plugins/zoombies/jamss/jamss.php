@@ -159,21 +159,24 @@ class plgCronJamss extends JPlugin {
     }
     private function _scan($lastrun) {
     	   $jtime = microtime(true);
-    	   
-      
-        
-        $maxcheck= (int) $this->params->get('maxcheck',5);
-        $days= (int) $this->params->get('days',1);
-        JLog::add('Start job:'.$maxcheck.' d:'.$days);
+
         /* * * * * * * * * * * * * * *  SETTINGS  * * * * * * * * * * * * * * */
         ini_set('max_execution_time', '0'); // supress problems with timeouts
         ini_set('set_time_limit', '0'); // supress problems with timeouts
-        ini_set('display_errors', '0'); // show/hide errors
-        define('JOOMLA_SEARCH', TRUE); // should script verify valid Joomla! dir ?
-                                       // set to FALSE if you use it on non-Joomla site
-        
-       $files= $this->params->get('file_manager_path',JPATH_ROOT);
-        $this->get_filelist($files);
+        ini_set('display_errors', '0'); // show/hide errors     
+       
+       
+       $file_check_path = $this->params->get('file_manager_path',JPATH_ROOT);	
+	     if ( ($file_check_path == "JPATH_ROOT") || ($file_check_path == JPATH_ROOT) ) {
+		     $file_check_path = JPATH_ROOT;
+	     } else {
+		     $file_check_path = JPATH_ROOT .DS . $file_check_path;
+	     }
+       
+       
+       
+    //  jexit(var_dump($file_check_path));
+        $this->get_filelist($file_check_path);
        
          JLog::add (JText::sprintf('DETECTOR_CRON_PROCESS_USERCOMPLETE', round(microtime(true) - $jtime, 3)));
     }
@@ -238,9 +241,9 @@ function scan_file($path) {
                 $total_results += $results_count; // total results of all fingerprints
                 if (!empty($all_results)) {
                     if (is_array($pattern)) { // then it has some additional comments
-                        JLog::add( "In file ".$path );                      
-                        JLog::add( "-> we found ".$results_count." occurence(s) of Pattern #".$pattern[2]." - ".$pattern[1]);
-                        JLog::add(" ---> Details:".$pattern[3]  );
+                        JLog::add("In file ".$path );                      
+                        JLog::add("we found ".$results_count." occurence(s) of Pattern #".$pattern[2]." - ".$pattern[1]);
+                        JLog::add("Details:".$pattern[3]  );
                       
                       
                         foreach ($all_results as $match) {
