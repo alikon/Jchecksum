@@ -17,7 +17,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgCronSlicommentsDetector extends JPlugin {
+class plgZoombieSlicommentsDetector extends JPlugin {
 
     /**
      * Constructor function
@@ -35,17 +35,17 @@ class plgCronSlicommentsDetector extends JPlugin {
     var $user = null;
     var $testo = null;
     
-         function plgCronSlicommentsDetector( &$subject, $params )
+         function plgZoombieSlicommentsDetector( &$subject, $params )
 	{
 		parent::__construct( $subject, $params );
 
 	
 	}
 
-    function doCronslicommentsdetector() {
+    function goAliveslicommentsdetector() {
     	  $this->lang = JFactory :: getLanguage();
         //$this->lang->load('plg_cron_userdetector', JPATH_ADMINISTRATOR);
-        $this->lang->load('plg_cron_slicommentsdetector');
+        $this->lang->load('plg_zoombie_slicommentsdetector');
         // Include the JLog class.
         jimport('joomla.log.log');
         // Get the date so that we can roll the logs over a time interval.
@@ -54,10 +54,10 @@ class plgCronSlicommentsDetector extends JPlugin {
 
         if (JPluginHelper::isEnabled('alikonweb', 'detector')) {
             // Add a start message.
-            JLog::add('Start job: CronSlicommnetsDetector.');
+            JLog::add('Start job: ZoombieSlicommnetsDetector.');
              $this->dbo = JFactory::getDBO();
              $this->_detectc();
-            JLog::add('End job: CronSlicommentsDetector.');
+            JLog::add('End job: ZoombieSlicommentsDetector.');
             return 4;
         } else {
             return 8;
@@ -81,7 +81,7 @@ class plgCronSlicommentsDetector extends JPlugin {
         // Get all the returned rows from the query as an array of objects.
         $rows = $this->dbo->loadObjectList();
         // Startup reporting.
-        JLog::add (JText::sprintf('DETECTOR_CRON_COMMENT_ITEMS', count($rows)));
+        JLog::add (JText::sprintf('ZOOMBIE_SLICOMMENTSDETECTOR_ITEMS', count($rows)));
         foreach ($rows as $user) {
             $i++;           
             $info_detector = JDispatcher::getInstance()->trigger('onDetectText', array(null, $user->email, $user->username, $user->description, ''));
@@ -99,7 +99,7 @@ class plgCronSlicommentsDetector extends JPlugin {
             JLog::add ($formattedid . ' name:' . $formattedun . ' mail:' . $formattedip . ' report:' . $info_detector[0]['text']);
            
         }
-         JLog::add (JText::sprintf('DETECTOR_CLI_PROCESS_COMPLETE', round(microtime(true) - $jtime, 3)));
+         JLog::add (JText::sprintf('ZOOMBIE_PROCESS_SLICOMMENTSDETECTOR_COMPLETE', round(microtime(true) - $jtime, 3)));
     }
  
 }

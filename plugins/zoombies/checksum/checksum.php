@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CronDetector cron plugin
+ * zoombieDetector cron plugin
  * Embedd a spam report on Joomla! Kunena component
  * 
  * @author: Alikon
@@ -17,7 +17,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgCronChecksum extends JPlugin {
+class plgZoombieChecksum extends JPlugin {
 	private $_time = null;
 
 	/**
@@ -41,9 +41,9 @@ class plgCronChecksum extends JPlugin {
      *
      * @param object $subject
      * @param object $config
-     * @return plgCronDetector4kunena
+     * @return plgZoombieDetector4kunena
      */
-	 function plgCronChecksum( &$subject, $params )
+	 function plgZoombieChecksum( &$subject, $params )
 	{
 		parent::__construct( $subject, $params );
 
@@ -54,7 +54,7 @@ class plgCronChecksum extends JPlugin {
 
 
 
-    function doCronchecksum($time) {
+    function goAlivechecksum($time) {
     	
         
        
@@ -68,7 +68,7 @@ class plgCronChecksum extends JPlugin {
 	    	*/
     	  $this->lang = JFactory :: getLanguage();
         //$this->lang->load('plg_cron_userdetector', JPATH_ADMINISTRATOR);
-        $this->lang->load('plg_cron_checksum');
+        $this->lang->load('plg_zoombie_checksum');
      //   jexit($this->params->get('mode','2'));
         // Include the JLog class.
         jimport('joomla.log.log');
@@ -76,13 +76,13 @@ class plgCronChecksum extends JPlugin {
         $date = JFactory::getDate()->format('Y-m-d');
             // Add a start message.
         
-            JLog::add('Start job: CronChecksum.');
+            JLog::add('Start job: zoombieChecksum.');
           
             
              $this->dbo = JFactory::getDBO();
             $this->_checksum($time);            
-             $this->ins_db_run(); 
-            JLog::add('End job: CronChecksum.');
+           //  $this->ins_db_run(); 
+            JLog::add('End job: ZoombieChecksum.');
             return 4;
 
     }
@@ -185,7 +185,7 @@ class plgCronChecksum extends JPlugin {
            JLog::add("Signature not updated"); 
          } 
        } 
-	   JLog::add (JText::sprintf('CHECKSUM_CRON_PROCESS', round(microtime(true) - $jtime, 3)));
+	   JLog::add (JText::sprintf('ZOOMBIE_PROCESS_CHECKSUM_COMPLETE', round(microtime(true) - $jtime, 3)));
     }  
     //     
         // 

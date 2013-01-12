@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="2.5" type="plugin" group="cron" method="upgrade" client="site">
-    <name>Cron - Checksum</name>
+<extension version="2.5" type="plugin" group="zoombie" method="upgrade" client="site">
+    <name>Zoombie - Checksum</name>
     <author>alikon</author>
-    <creationDate>October 2012</creationDate>
+    <creationDate>December 2012</creationDate>
     <authorEmail>info@alikonweb.it</authorEmail>
     <authorUrl>http://www.alikonweb.it</authorUrl>
     <copyright>Copyright (C) 2012 Alikonweb</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>2.0.0</version>
-    <description>PLG_CRONUSERDETECTOR_4_JOOMLA_XML_DESCRIPTION</description>
+    <version>1.0.0</version>
+    <description>PLG_ZOOMBIE_CHECKSUM_4_JOOMLA_XML_DESCRIPTION</description>
     <files>		
         <filename plugin="checksum">checksum.php</filename>	
         <filename>index.html</filename>			
     </files>
     <languages>
-        <language tag="en-GB">language/en-GB/en-GB.plg_system_detector.ini</language>
-        <language tag="en-GB">language/en-GB/en-GB.plg_system_detector.sys.ini</language>
+        <language tag="en-GB" client="site">language/en-GB/en-GB.plg_zoombie_checksum.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_zoombie_checksum.sys.ini</language>
     </languages>
     <config>
         <fields name="params">
@@ -23,31 +23,44 @@
 			
                 <field name="last_run" type="hidden" default="1352101719" label="Admin advise" description="Send email to Admin on spam ">
                 </field>
-				<field name="interval" type="list" default="60" label="INTerval" >			
-				<option value="5" > 5 min</option>
-				<option value="10" >10 min</option>
-				<option value="20" >20 min</option>
-				<option value="30" >30 min</option>
-				<option value="60" selected="selected"> 1 hour</option>
-				<option value="120" > 2 hours</option>
-				<option value="180" > 3 hours</option>
-				<option value="240" > 4 hours</option>
-				<option value="360" > 6 hours</option>
-			    <option value="720" > 12 hours</option>
-				<option value="1440" > 24 hours</option>			
-				</field> 
-				<field name="file_manager_path" type="folderlist" default="JPATH_ROOT" label="COM_SECURITYCHECK_CONFIG_FILE_MANAGER_PATH_LABEL" description="COM_SECURITYCHECK_CONFIG_FILE_MANAGER_PATH_DESCRIPTION" directory="" filter="" exclude="" stripext="" hide_none="true"/>
+                <field name="interval" type="list" default="60" label="Alive" description="Set when go alive">			
+                    <option value="5" > 5 min</option>
+                    <option value="10" >10 min</option>
+                    <option value="20" >20 min</option>
+                    <option value="30" >30 min</option>
+                    <option value="60" selected="selected"> 1 hour</option>
+                    <option value="120" > 2 hours</option>
+                    <option value="180" > 3 hours</option>
+                    <option value="240" > 4 hours</option>
+                    <option value="360" > 6 hours</option>
+                    <option value="720" > 12 hours</option>
+                    <option value="1440" > 24 hours</option>			
+                    <option value="2880" > 2 days</option>
+                    <option value="10080" > 1 week</option>
+                    <option value="20160" > 2 weeks</option>
+                    <option value="40320" > 1 month</option>
+                    <option value="80640" > 2 month</option>
+                    <option value="120960" > 3 month</option>
+                    <option value="161280" > 4 month</option>
+                    <option value="241920" > 6 month</option>
+                    <option value="483840" > 1 year</option>
+                </field> 
+                <field name="file_manager_path" type="folderlist" default="JPATH_ROOT" label="Folder" description="Select folder" directory="" filter="" exclude="" stripext="" hide_none="true"/>
 
                 <field name="mode" type="list" default="2" label="Mode" description="Choose the checksum mode first, check, update ">
                     <option value="1">First</option>
                     <option value="2">Check</option>
                     <option value="3">Update</option>
                 </field>	
-            <field name="key" type="text" default="" label="PLG_webcron_KEY_LABEL" description="PLG_webcron_KEY_DESC" />    			                    
+                 <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" />
+                <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>                        
             </fieldset>			
         </fields>
     </config>
     <updateservers>
-        <server type="extension" priority="1" name="System - Detector">http://www.joomladdons.eu/update/plg_cron_userdetector_update.xml</server>
+        <server type="extension" priority="1" name="Zoombie - Checksum">http://www.joomladdons.eu/update/plg_zoombie_checksum_update.xml</server>
     </updateservers>
 </extension>
