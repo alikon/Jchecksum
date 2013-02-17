@@ -1,16 +1,20 @@
 README file
 
-A way to run scheduled task on joomla with or without crontab
+A way to run scheduled task on joomla with CRON OR WEBCRON OR CLI
 
 
-without CRON
+with WEBCRON
 
 The Zoombie system plugin when alive check for little zoombies to run
 
-with CRON
+
+with CRON 
 
 you can schedule the CLI app for check for little zoombies to run
 
+with CLI 
+
+you can run CLI app for check for little zoombies to run php cli2zoombie.php
 
 
 the little zoombies
@@ -21,7 +25,7 @@ the little zoombies
  
  - site md5 checksum
  
- - slicomments spam detector
+ - latest slicomments 
 
  - users spam detector
  
@@ -30,3 +34,11 @@ the little zoombies
  - DB tables optimize 
  
  - Clean expired cache
+ 
+ - Smart search indexer
+ 
+ - Extension Update
+ 
+ - Latest article
+ 
+ - Latest user 
