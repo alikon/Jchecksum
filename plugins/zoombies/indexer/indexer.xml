@@ -23,7 +23,7 @@
             <fieldset name="Basic" label="Basic">
                 <field name="last_run" type="hidden" default="1352101719" label="Admin advise" description="Send email to Admin on spam ">
                 </field>
-                <field name="interval" type="list" default="60" label="Interval" description="When go alive">			
+                <field name="interval" type="list" default="60" label="Interval" description="Set when zoombie indexer go alive and run">			
                     <option value="5" > 5 min</option>
                     <option value="10" >10 min</option>
                     <option value="20" >20 min</option>
@@ -44,9 +44,8 @@
                     <option value="161280" > 4 month</option>
                     <option value="241920" > 6 month</option>
                     <option value="483840" > 1 year</option>
-                </field>                    
-                <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" /> 
-                <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
+                </field>                                   
+                <field name="sendmail" type="radio" label="Mail" default="0" description="Send mail when indexer zoombie alive" >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
                 </field>  

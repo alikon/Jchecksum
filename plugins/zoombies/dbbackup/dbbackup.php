@@ -57,8 +57,8 @@ class plgZoombieDbBackup extends JPlugin {
         // Get the date so that we can roll the logs over a time interval.
         $this->date = JFactory::getDate()->format('Y-m-d');
         $config = & JFactory::getApplication();
-        $this->name = 'dbbackup.'.$config->getCfg('db');
-        $path=JPATH_SITE. DS. 'plugins'. DS. 'zoombie'. DS. 'dbbackup' . DS. 'backup' . DS;
+        $this->name = 'dbbackup.' . $config->getCfg('db');
+        $path = JPATH_SITE . DS . 'plugins' . DS . 'zoombie' . DS . 'dbbackup' . DS . 'backup' . DS;
         $this->file = $path . $this->name . '_' . $this->date . '.sql';
         $this->sqlzip = $path . $this->name . '_' . $this->date . '.zip';
         $this->host = $config->getCfg('host');
@@ -77,6 +77,7 @@ class plgZoombieDbBackup extends JPlugin {
 
     private function _DbBackup($lastrun) {
         $jtime = microtime(true);
+        $sendmail = (int) $this->params->get('sendmail', '0');
         $interval = (int) $this->params->get('interval', 5);
         $this->tables = $this->params->get('tables', array('*'));
         //JLog::add('Start job:' . $interval . ' t:' . $this->tables);
@@ -133,17 +134,56 @@ class plgZoombieDbBackup extends JPlugin {
         $zipFilesArray[] = array('name' => $this->name . '_' . $this->date . '.sql', 'data' => $data);
         $zip = JArchive::getAdapter('zip');
         $zip->create($this->sqlzip, $zipFilesArray);
+        if (!JFile::delete($this->file)) {
+            JLog::add(JText::_('CAN_NOT_DELETE_THE_REQUESTED_FILE'));
+        }
 
 
 
 
         JLog::add(JText::sprintf('ZOOMBIE_PROCESS_DBBACKUP_COMPLETE', round(microtime(true) - $jtime, 3)));
+        if ($sendmail) {
+            $this->sendFile();
+        }
     }
 
     private function Connect() {
         mysql_connect($this->host, $this->user, $this->pass) or die(mysql_error());
         mysql_select_db($this->database) or die(mysql_error());
         mysql_query("SET NAMES 'utf8';");
+    }
+
+    protected function sendFile() {
+        $config = & JFactory::getConfig();
+        $now = &JFactory::getDate();
+        $now = $now->toUnix();
+        $fromemail = $config->getValue('config.mailfrom');
+        $sendfile = $this->params->get('sendfile', false);
+        $toemail = $fromemail;
+        $subject = $zoombie . ' : ' . $config->getValue('config.sitename');
+        $body = "\n\n * Zoombie DbBackup runned at " . date('d.m.Y, H:i:s', $now) . "\n";
+        $body .= "\n\n Zoombie Application 4 Joomla  by  http://www.alikonweb.it \n";
+        $mailer = & JFactory::getMailer();
+        $mailer->setSender(array($fromemail, 'Zoombie Task DbBackup'));
+        $mailer->addRecipient($toemail);
+        $mailer->setSubject($subject);
+        $mailer->setBody($body);
+        $date = JFactory::getDate()->format('Y-m-d');
+
+        $attachment = JPATH_SITE . DS . 'plugins' . DS . 'zoombie' . DS . 'dbbackup' . DS . 'backup' . DS . 'dbbackup.' . $config->getValue('db') . '_' . $date . '.zip';
+        //jexit(var_dump($attachment));
+        if ((!empty($attachment))&&($sendfile)) {
+            if (!file_exists($attachment) || !(is_file($attachment) || is_link($attachment))) {
+                JLog::add("The file " . $attachment . " does not exist, or it's not a file; no email sent");
+            } else {
+                JLog::add("-- Attaching File");
+                $mailer->addAttachment($attachment);
+            }
+        }
+
+        $mailer->IsHTML(false);
+
+        return $mailer->Send();
     }
 
 }

@@ -86,7 +86,7 @@ class plgZoombieLatestUser extends JPlugin {
 		}
 		$this->dbo->setQuery($query, 0, $this->params->get('shownumber'));
 		$items = $this->dbo->loadObjectList();
-       jexit(var_dump($items));
+       //jexit(var_dump($items));
         //$date = JFactory::getDate()->format('Y-m-d');
         $config = & JFactory::getConfig();
         $now = &JFactory::getDate();

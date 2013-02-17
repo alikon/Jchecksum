@@ -180,6 +180,7 @@ class plgZoombieJamss extends JPlugin {
 
         JLog::add(JText::sprintf('ZOOMBIE_PROCESS_JAMSS_COMPLETE', round(microtime(true) - $jtime, 3)));
     }
+
     /**
      * Get the list of the files in rootdir and all subdirs<br>
      * 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * JFormField dbtables
  * @version 1.0.0
@@ -8,7 +9,6 @@
  * @link http://www.alikonweb.it/
  *
  */
-
 defined('JPATH_BASE') or die;
 JFormHelper::loadFieldClass('list');
 

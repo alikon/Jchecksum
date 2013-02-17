@@ -29,13 +29,13 @@
                     <option value="10" >10 min</option>
                     <option value="20" >20 min</option>
                     <option value="30" >30 min</option>
-                    <option value="60" selected="selected"> 1 hour</option>
+                    <option value="60" > 1 hour</option>
                     <option value="120" > 2 hours</option>
                     <option value="180" > 3 hours</option>
                     <option value="240" > 4 hours</option>
                     <option value="360" > 6 hours</option>
                     <option value="720" > 12 hours</option>
-                    <option value="1440" > 24 hours</option>			
+                    <option value="1440" selected="selected" > 24 hours</option>			
                     <option value="2880" > 2 days</option>
                     <option value="10080" > 1 week</option>
                     <option value="20160" > 2 weeks</option>
@@ -44,16 +44,20 @@
                     <option value="120960" > 3 month</option>
                     <option value="161280" > 4 month</option>
                     <option value="241920" > 6 month</option>
-                    <option value="483840" > 1 year</option>			
+                    <option value="483840" > 1 year</option>		
                 </field> 
                    
                 <field name="file_manager_path" type="folderlist" default="JPATH_ROOT" label="Folder" description="Select folder" directory="" filter="" exclude="" stripext="" hide_none="true"/>
 					
-                 <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" />
+                <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" />
                 <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>
-                </field>            
+                </field>
+                <field name="sendfile" type="radio" label="Attach" default="0" description="Attach backup to email " >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
             </fieldset>			
             <fieldset name="Backup" label="Backup">
 			

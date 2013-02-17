@@ -17,7 +17,7 @@
 // no direct access
 defined('_JEXEC') or die('Restricted access');
 
-class plgZoombieFinder extends JPlugin {
+class plgZoombieIndexer extends JPlugin {
 
     /**
      * Constructor function
@@ -45,7 +45,7 @@ class plgZoombieFinder extends JPlugin {
 	 */
 	private $_qtime = null;
 
-    function plgZoombieFinder(&$subject, $params) {
+    function plgZoombieIndexer(&$subject, $params) {
         parent::__construct($subject, $params);
 
         if (!defined('DS')) {
@@ -56,7 +56,7 @@ class plgZoombieFinder extends JPlugin {
         ini_set('max_execution_time', 480);
     }
 
-    function goAliveFinder($time) {
+    function goAliveIndexer($time) {
         $this->lang = JFactory :: getLanguage();
         $this->lang->load('plg_zoombie_update');
         // Include the JLog class.
@@ -84,7 +84,7 @@ class plgZoombieFinder extends JPlugin {
 		// import library dependencies
 		require_once JPATH_ADMINISTRATOR . '/components/com_finder/helpers/indexer/indexer.php';
 		jimport('joomla.application.component.helper');
-
+    jimport('joomla.environment.uri');
 		// fool the system into thinking we are running as JSite with Finder as the active component
 		JFactory::getApplication('site');
 		$_SERVER['HTTP_HOST'] = 'domain.com';
@@ -102,7 +102,7 @@ class plgZoombieFinder extends JPlugin {
 		JPluginHelper::importPlugin('finder');
 
 		// Starting Indexer.
-		$this->out(JText::_('FINDER_CLI_STARTING_INDEXER'), true);
+		JLog::add(JText::_('FINDER_CLI_STARTING_INDEXER'));
 
 		// Trigger the onStartIndex event.
 		JDispatcher::getInstance()->trigger('onStartIndex');
@@ -114,13 +114,13 @@ class plgZoombieFinder extends JPlugin {
 		$state = FinderIndexer::getState();
 
 		// Setting up plugins.
-		JLog::add(JText::_('FINDER_CLI_SETTING_UP_PLUGINS');
+		JLog::add(JText::_('FINDER_CLI_SETTING_UP_PLUGINS'));
 
 		// Trigger the onBeforeIndex event.
 		JDispatcher::getInstance()->trigger('onBeforeIndex');
 
 		// Startup reporting.
-		JLog::add((JText::sprintf('FINDER_CLI_SETUP_ITEMS', $state->totalItems, round(microtime(true) - $this->_time, 3));
+		JLog::add(JText::sprintf('FINDER_CLI_SETUP_ITEMS', $state->totalItems, round(microtime(true) - $this->_time, 3)));
 
 		// Get the number of batches.
 		$t = (int) $state->totalItems;
@@ -142,13 +142,13 @@ class plgZoombieFinder extends JPlugin {
 				JDispatcher::getInstance()->trigger('onBuildIndex');
 
 				// Batch reporting.
-				JLog::add((JText::sprintf('FINDER_CLI_BATCH_COMPLETE', ($i + 1), round(microtime(true) - $this->_qtime, 3));
+				JLog::add(JText::sprintf('FINDER_CLI_BATCH_COMPLETE', ($i + 1), round(microtime(true) - $this->_qtime, 3)));
 			}
 		}
 		catch (Exception $e)
 		{
 			// Display the error
-			$this->out($e->getMessage(), true);
+			JLog::add($e->getMessage());
 
 			// Reset the indexer state.
 			FinderIndexer::resetState();
@@ -158,10 +158,10 @@ class plgZoombieFinder extends JPlugin {
 		}
 
 		// Total reporting.
-		JLog::add(JText::sprintf('FINDER_CLI_PROCESS_COMPLETE', round(microtime(true) - $this->_time, 3));
+		JLog::add(JText::sprintf('FINDER_CLI_PROCESS_COMPLETE', round(microtime(true) - $this->_time, 3)));
 
 		// Reset the indexer state.
 		FinderIndexer::resetState();
 	}
-    }  
+       
 }

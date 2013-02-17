@@ -1,7 +1,7 @@
 <?php
 
 /**
- * zoombieDetector cron plugin
+ * zoombieChecksum cron plugin
  * Embedd a spam report on Joomla! Kunena component
  * 
  * @author: Alikon
@@ -103,7 +103,7 @@ class plgZoombieChecksum extends JPlugin {
        $dir=$file_check_path;    	
 		  $para=$this->params->get('mode','2');
        #file for storing fingerprints, should be writeable in case of fingerprints update 
-       $file = JPATH_SITE."/cli/checksum/fingerprints"; 
+       $file = JPATH_SITE."/plugins/zoombie/checksum/fingerprints"; 
        #set this value to false if you do not want to update fingerprints 
        
        switch ($this->params->get('mode','2')) {

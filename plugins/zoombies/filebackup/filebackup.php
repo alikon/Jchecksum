@@ -59,7 +59,7 @@ class plgZoombieFileBackup extends JPlugin {
         // Get the date so that we can roll the logs over a time interval.
         $this->date = JFactory::getDate()->format('Y-m-d');
         $config = & JFactory::getApplication();
-        $this->name = 'filebackup.'.$config->getCfg('sitename');
+        $this->name = 'filebackup.' . $config->getCfg('sitename');
         // Add a start message.
         JLog::add('Start job: ZoombieFileBackup.');
         $this->_FileBackup($time);
@@ -71,16 +71,23 @@ class plgZoombieFileBackup extends JPlugin {
     private function _FileBackup($lastrun) {
         $jtime = microtime(true);
 
-
+        $sendmail = (int) $this->params->get('sendmail', '0');
         $interval = (int) $this->params->get('interval', 5);
-        $files = $this->params->get('file_manager_path', JPATH_ROOT);
+        $files = $this->params->get('file_manager_path', '');
+        if ($files == 'JPATH_ROOT') {
+            $files = '';
+        }
+
         //JLog::add('Start job:' . $interval . ' t:' . $files);
         //jexit(var_dump($files));
         //$this->removezip(JPATH_ROOT.DS.'tmp', 'zip');
-        $path =JPATH_SITE . DS . 'plugins' . DS . 'zoombie' . DS . 'filebackup' . DS . 'backup' . DS;
+        $path = JPATH_SITE . DS . 'plugins' . DS . 'zoombie' . DS . 'filebackup' . DS . 'backup' . DS;
         //$this->createzip(JPATH_ROOT . '/' . $files, JPATH_ROOT . '/tmp/' . $this->name . '_' . $this->date . '.zip');
         $this->createzip(JPATH_ROOT . '/' . $files, $path . $this->name . '_' . $this->date . '.zip');
         JLog::add(JText::sprintf('ZOOMBIE_PROCESS_FILEBACKUP_COMPLETE', round(microtime(true) - $jtime, 3)));
+        if ($sendmail) {
+            $this->sendFile();
+        }
     }
 
     function createzip($source, $destination) {
@@ -118,20 +125,37 @@ class plgZoombieFileBackup extends JPlugin {
         // Original: http://stackoverflow.com/questions/1334613/how-to-recursively-zip-a-directory-in-php
     }
 
-    //
-    function removezip($file, $ext) {
-        $handle = opendir($file);
+    protected function sendFile() {
+        $config = & JFactory::getConfig();
+        $now = &JFactory::getDate();
+        $now = $now->toUnix();
+        $fromemail = $config->getValue('config.mailfrom');
+        $sendfile = $this->params->get('sendfile', false);
+        $toemail = $fromemail;
+        $subject = $zoombie . ' : ' . $config->getValue('config.sitename');
+        $body = "\n\n * Zoombie FileBackup runned at " . date('d.m.Y, H:i:s', $now) . "\n";
+        $body .= "\n\n Zoombie Application 4 Joomla  by  http://www.alikonweb.it \n";
+        $mailer = & JFactory::getMailer();
+        $mailer->setSender(array($fromemail, 'Zoombie Task FileBackup'));
+        $mailer->addRecipient($toemail);
+        $mailer->setSubject($subject);
+        $mailer->setBody($body);
+        $date = JFactory::getDate()->format('Y-m-d');
 
-        /* This is the correct way to loop over the directory. */
-        while (false !== ($file2 = readdir($handle))) {
-            $ext2 = JFile::getExt($file2);
-
-            if ($ext2 == $ext && $file2 != '.' && $file2 != '..') {
-                unlink($file . DS . $file2);
+        $attachment = JPATH_SITE . DS . 'plugins' . DS . 'zoombie' . DS . 'filebackup' . DS . 'backup' . DS . 'filebackup.' . $config->getValue('config.sitename') . '_' . $date . '.zip';
+        //jexit(var_dump($attachment));
+        if ((!empty($attachment))&&($sendfile)) {
+            if (!file_exists($attachment) || !(is_file($attachment) || is_link($attachment))) {
+                JLog::add("The file " . $attachment . " does not exist, or it's not a file; no email sent");
+            } else {
+                JLog::add("-- Attaching File");
+                $mailer->addAttachment($attachment);
             }
         }
-        closedir($handle);
+
+        $mailer->IsHTML(false);
+
+        return $mailer->Send();
     }
 
-//
 }
