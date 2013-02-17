@@ -3,11 +3,11 @@ README file
 A way to run scheduled task on joomla with or without crontab
 
 
-without CRON
+without crontab
 
 The Zoombie system plugin when alive check for little zoombies to run
 
-with CRON
+with crontab
 
 you can schedule the CLI app for check for little zoombies to run
 
