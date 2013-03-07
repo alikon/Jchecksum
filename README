@@ -6,6 +6,7 @@ A way to run scheduled task on joomla with CRON OR WEBCRON OR CLI
 with WEBCRON
 
 The Zoombie system plugin when alive check for little zoombies to run
+invoked by WEBCRON services like this free one https://www.setcronjob.com/
 
 
 with CRON 
@@ -42,3 +43,7 @@ the little zoombies
  - Latest article
  
  - Latest user 
+ 
+ - Archive content
+  
+ - Link Checker
