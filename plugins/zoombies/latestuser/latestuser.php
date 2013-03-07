@@ -49,7 +49,7 @@ class plgZoombieLatestUser extends JPlugin {
 
     function goAliveLatestUser($time) {
         $lang = JFactory::getLanguage();
-		$lang->load('plg_zoombie_latestuser');
+        $lang->load('plg_zoombie_latestuser');
         // Include the JLog class.
         jimport('joomla.log.log');
         // Get the date so that we can roll the logs over a time interval.
@@ -59,7 +59,7 @@ class plgZoombieLatestUser extends JPlugin {
         // Add a start message.
         JLog::add('Start job: Zoombielatestuser.');
         $this->dbo = JFactory::getDBO();
-        
+
         $this->_latestuser();
         JLog::add('End job: Zoombielatestuser.');
         return 4;
@@ -67,26 +67,24 @@ class plgZoombieLatestUser extends JPlugin {
     }
 
     function _latestuser() {
-       $query	= $this->dbo->getQuery(true);
-		$query->select('a.id, a.name, a.username, a.registerDate');
-		$query->order('a.registerDate DESC');
-		$query->from('#__users AS a');
-		$user = JFactory::getUser();
-		if (!$user->authorise('core.admin') && $this->params->get('filter_groups', 0) == 1)
-		{
-			$groups = $user->getAuthorisedGroups();
-			if (empty($groups))
-			{
-				return array();
-			}
-			$query->leftJoin('#__user_usergroup_map AS m ON m.user_id = a.id');
-			$query->leftJoin('#__usergroups AS ug ON ug.id = m.group_id');
-			$query->where('ug.id in (' . implode(',', $groups) . ')');
-			$query->where('ug.id <> 1');
-		}
-		$this->dbo->setQuery($query, 0, $this->params->get('shownumber'));
-		$items = $this->dbo->loadObjectList();
-       //jexit(var_dump($items));
+        $query = $this->dbo->getQuery(true);
+        $query->select('a.id, a.name, a.username, a.email');
+        $query->order('a.registerDate DESC');
+        $query->from('#__users AS a');
+        $user = JFactory::getUser();
+        if (!$user->authorise('core.admin') && $this->params->get('filter_groups', 0) == 1) {
+            $groups = $user->getAuthorisedGroups();
+            if (empty($groups)) {
+                return array();
+            }
+            $query->leftJoin('#__user_usergroup_map AS m ON m.user_id = a.id');
+            $query->leftJoin('#__usergroups AS ug ON ug.id = m.group_id');
+            $query->where('ug.id in (' . implode(',', $groups) . ')');
+            $query->where('ug.id <> 1');
+        }
+        $this->dbo->setQuery($query, 0, $this->params->get('shownumber'));
+        $items = $this->dbo->loadObjectList();
+        //jexit(var_dump($items));
         //$date = JFactory::getDate()->format('Y-m-d');
         $config = & JFactory::getConfig();
         $now = &JFactory::getDate();
@@ -98,18 +96,13 @@ class plgZoombieLatestUser extends JPlugin {
         $body = "\n\n * Zoombie latestuser runned at " . date('d.m.Y, H:i:s', $now) . "\n";
         //
         foreach ($items as &$item) {
-            $item->slug = $item->id . ':' . $item->alias;
-            $item->catslug = $item->catid . ':' . $item->category_alias;
+           
 
-            if ($access || in_array($item->access, $authorised)) {
-                // We know that user has the privilege to view the article
-                $item->link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catslug));
-            } else {
-                $item->link = JRoute::_('index.php?option=com_users&view=login');
-            }
-            $body .= "\n\nTitle:" . $item->title;
-            $body .= "\n\nAuthor:" . $item->modified_by_name;
-            $body .= "\n\nlink:" . JPATH_ROOT.$item->link;
+           
+            $body .= "\n\nUserID:" . $item->id;
+            $body .= "\n\nName:" . $item->name;
+            $body .= "\n\nUsername:" . $item->username;
+            $body .= "\n\nRegister:" . $item->email;
         }
 
 

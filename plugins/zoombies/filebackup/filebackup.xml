@@ -49,7 +49,6 @@
                    
                 <field name="file_manager_path" type="folderlist" default="JPATH_ROOT" label="Folder" description="Select folder" directory="" filter="" exclude="" stripext="" hide_none="true"/>
 					
-                <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" />
                 <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>

@@ -49,7 +49,7 @@ class plgZoombieLatestArticle extends JPlugin {
 
     function goAliveLatestArticle($time) {
         $lang = JFactory::getLanguage();
-		$lang->load('plg_zoombie_latestarticle');
+	$lang->load('plg_zoombie_latestarticle', JPATH_ADMINISTRATOR);
         // Include the JLog class.
         jimport('joomla.log.log');
         // Get the date so that we can roll the logs over a time interval.
@@ -68,7 +68,7 @@ class plgZoombieLatestArticle extends JPlugin {
 
     function _latestarticle() {
         require_once JPATH_SITE . '/components/com_content/helpers/route.php';
-
+jimport('joomla.environment.uri' );
         JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_content/models', 'ContentModel');
         // Get the dbo
         $db = JFactory::getDbo();
@@ -158,20 +158,21 @@ class plgZoombieLatestArticle extends JPlugin {
         $toemail = $fromemail;
         $subject = $zoombie . ' : ' . $config->getValue('config.sitename');
         $body = "\n\n * Zoombie LatestArticle runned at " . date('d.m.Y, H:i:s', $now) . "\n";
-        //
+         //var_dump( JURI::base( ));
         foreach ($items as &$item) {
             $item->slug = $item->id . ':' . $item->alias;
             $item->catslug = $item->catid . ':' . $item->category_alias;
 
             if ($access || in_array($item->access, $authorised)) {
                 // We know that user has the privilege to view the article
-                $item->link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catslug));
+                $item->link = JRoute::_(JURI::base().ContentHelperRoute::getArticleRoute($item->slug, $item->catslug));
             } else {
                 $item->link = JRoute::_('index.php?option=com_users&view=login');
             }
-            $body .= "\n\nTitle:" . $item->title;
-            $body .= "\n\nAuthor:" . $item->modified_by_name;
-            $body .= "\n\nlink:" . JPATH_SITE.$item->link;
+            $body .= "\n\nTitle: " . $item->title;
+            $body .= "\n\nAuthor: " . $item->modified_by_name." ".$item->modified;
+            $body .= "\n\nlink: " . $item->link;
+           
         }
 
 

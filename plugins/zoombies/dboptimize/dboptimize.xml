@@ -47,7 +47,7 @@
                     <option value="483840" > 1 year</option>
                 </field>       
                 <field name="tables" type="dbtables" default='*' multiple="true" label="Select a table" />
-                <field name="key" type="text" default="" label="Zoombie key" description="Zoombie activation key" /> 
+              
                 <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
                     <option value="0">JNO</option>
                     <option value="1">JYES</option>

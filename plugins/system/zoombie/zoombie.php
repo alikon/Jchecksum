@@ -47,11 +47,12 @@ class plgSystemZoombie extends JPlugin {
         if ($app->isAdmin()) {
             return;
         }
-        if ($this->params->get('cronmode', 1) == 0) {
+        //echo($this->params->get('cronmode',1));
+        if ($this->params->get('cronmode', 1) != 1) {
             return;
         }
 
-        //echo($this->params->get('cronmode',1));
+       
 
         $key = $this->params->get('key', "");
         if (($key == "") || (array_key_exists($key, JRequest::get('GET')))) {
