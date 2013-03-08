@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="system" method="upgrade" client="site">
+    <name>System - Alikonweb Zoombie</name>
+    <author>alikon</author>
+    <creationDate>December 2012</creationDate>
+    <authorEmail>info@alikonweb.it</authorEmail>
+    <authorUrl>http://www.alikonweb.it</authorUrl>
+    <copyright>Copyright (C) 2012 Alikonweb</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>1.0.0</version>
+    <description>PLG_SYSTEM_ZOOMBIE_4_JOOMLA_XML_DESCRIPTION</description>
+    <files>
+        <filename plugin="zoombie">zoombie.php</filename>
+        <filename>index.html</filename>
+        <folder>logs</folder>
+    </files>
+    <languages>
+        <language tag="en-GB" client="site">language/en-GB/en-GB.plg_system_zoombie.ini</language>     
+        <language tag="en-GB">language/en-GB/en-GB.plg_system_zoombie.sys.ini</language>     
+    </languages>
+    <config>
+        <fields name="params">
+            <fieldset name="basic">
+                 <field name="cronmode" type="radio" default="1" label="Task Starter Engine" description="Set task starter engine: Cron, Webcron, CLI">	
+                  <option value="0" >Cron</option>
+                  <option value="1" >Webcron</option>
+                  <option value="2" >CLI</option>                  
+                  </field>    
+                 <field name="interval" type="list" default="60" label="Schedule" description="Set when zoombie go alive and look for task to run   note that with cron engine it need to be fixed on cpanel cron jobs">			
+                    <option value="1" > 1 min</option>
+                    <option value="2" > 2 min</option>				
+                    <option value="3" > 3 min</option>
+                    <option value="4" > 4 min</option>
+                    <option value="5" > 5 min</option>
+                    <option value="10" >10 min</option>
+                    <option value="20" >20 min</option>
+                    <option value="30" >30 min</option>
+                    <option value="60" selected="selected"> 1 hour</option>
+                    <option value="120" > 2 hours</option>
+                    <option value="180" > 3 hours</option>
+                    <option value="240" > 4 hours</option>
+                    <option value="360" > 6 hours</option>
+                    <option value="720" > 12 hours</option>
+                    <option value="1440" > 24 hours</option>			
+                </field> 
+                <field name="key" type="text" default="" label="Zoombie key" description="Zoombie secret activation key when used with WEBCRON" />
+                <field name="sendmail" type="radio" label="Mail" default="1" description="Send mail when zoombie alive" >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>  
+                <field name="last_run" type="hidden" default="1352101719" label="FG_PLG_PCP_INT" description="FG_PLG_PCP_INT_DESC" />			
+                <field name="taskfile" type="hidden" size="30" label="SECRET_KEY_FOR_DOWNLOAD" default="Secret Key" description="SECRET_KEY_FOR_DOWNLOAD_DESC" />
+                <field name="taskremove" type="hidden" size="30" label="SECRET_KEY_FOR_REMOVE" default="Secret Key" description="SECRET_KEY_FOR_REMOVE_DESC" />
+            </fieldset>
+        </fields>
+    </config>
+    <updateservers>
+        <server type="extension" priority="1" name="System - Alikonweb Zoombie">http://www.joomladdons.eu/update/plg_system_zoombie_update.xml</server>
+    </updateservers>
+</extension>
