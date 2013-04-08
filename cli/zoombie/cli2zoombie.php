@@ -64,6 +64,10 @@ class cli2zoombie extends JApplicationCli {
     protected $dbo = null;
     protected $app = null;
     protected $sup = null;
+    var $sendfile = null;
+    var $runned = null;
+    var $interval = null;
+    var $task_i_time = null;
 
     /**
      * Class constructor.
@@ -124,21 +128,21 @@ class cli2zoombie extends JApplicationCli {
           );
          */
         $this->dbo = JFactory::getDBO();
-        	// Get the quey builder class from the database.
+        // Get the quey builder class from the database.
         $query = $this->dbo->getQuery(true);
 
         // Get a list of the plugins from the database.
         $query->select('u.id')
                 ->from('#__user_usergroup_map AS m, #__usergroups as  g, #__users as u')
-                ->where('g.title = '.$this->dbo->quote('Super Users'))
-                ->where('g.id = m.group_id' )
-                ->where('u.id = m.user_id' );
-                
+                ->where('g.title = ' . $this->dbo->quote('Super Users'))
+                ->where('g.id = m.group_id')
+                ->where('u.id = m.user_id');
+
 
         // Push the query builder object into the database connector.
         $this->dbo->setQuery($query);
         $this->sup = $this->dbo->loadObjectList();
-        echo(var_dump($this->sup[0]->id));
+        // echo(var_dump($this->sup[0]->id));
     }
 
     /**
@@ -156,11 +160,19 @@ class cli2zoombie extends JApplicationCli {
      * @since   11.3
      */
     public function doExecute() {
-        //
-        // Check we have some critical information.
+        $this->task_i_time = microtime(true);
+        // Check if we have some critical information.
+        // and get Zoombie system plugin parameters
+        // $this->getZoombieSystem();
+        //  if (!$this->engine_check()) {
+        if (!$this->getZoombieSystem()) {
+            JLog::add('Starter engine is not cron.');
+            echo('Starter engine is not cron.');
+            return;
+        }
         //
 
-	if (!defined('JPATH_PLUGINS') || !is_dir(JPATH_PLUGINS)) {
+        if (!defined('JPATH_PLUGINS') || !is_dir(JPATH_PLUGINS)) {
             throw new Exception('JPATH_PLUGINS not defined');
         }
 
@@ -199,6 +211,7 @@ class cli2zoombie extends JApplicationCli {
         if (count($plugins) > 0) {
             JLog::add('Zoombie alive.');
         }
+        $tasks = array();
         //
         // Run the cron plugins.
         //
@@ -218,7 +231,8 @@ class cli2zoombie extends JApplicationCli {
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $old_interval = $params->get('interval', 5);
-
+            $runned = (int) $params->get('runned', 0);
+            $runned++;
             // correct value if value is under the minimum
             if ($interval < 300) {
                 $interval = 300;
@@ -267,13 +281,14 @@ class cli2zoombie extends JApplicationCli {
 
 
                  */
-                 //get one superadministrator
-                 
-                $admin = JFactory::getUser((int)$this->sup[0]->id);
+                //get one superadministrator
+
+                $admin = JFactory::getUser((int) $this->sup[0]->id);
                 // var_dump($admin->getAuthorisedViewLevels());
                 // Register the needed session variables
                 $session = JFactory::getSession();
                 $session->set('user', $admin);
+                $task_i_time = microtime(true);
                 // Trigger the event and let the Joomla plugins do all the work.                                    
                 JPluginHelper::importPlugin('zoombie', $plugin->element);
                 $dispatcher = & JDispatcher::getInstance();
@@ -285,6 +300,9 @@ class cli2zoombie extends JApplicationCli {
 
                     $params->set('interval', $old_interval);
                     $params->set('last_run', $now);
+                    $durata = round(microtime(true) - $task_i_time, 3);
+                    $params->set('runned', $runned);
+                    $params->set('durata', $durata);
                     //(var_dump($params));
                     $query = 'UPDATE #__extensions' .
                             ' SET params=' . $this->dbo->Quote($params) .
@@ -299,8 +317,18 @@ class cli2zoombie extends JApplicationCli {
                         jexit($this->dbo->getErrorMsg());
                         return false;
                     }
+                    $task = new stdClass();
 
-                    echo($plugin->element . ' just runned ' . date('H:i:s, d.m.Y', $now)) . "\n";
+                    $task->id = $runned;
+
+                    $task->name = $plugin->element;
+
+                    $task->durata = $durata;
+
+                    $task->next = $interval + $now;
+
+                    $tasks[] = $task;
+                    echo $plugin->element . ' just runned in ' . $durata . "\n";
                 } else {
                     JLog::add($plugin->element . ' no ACL to run');
                     echo($plugin->element . ' no ACL to run');
@@ -320,8 +348,212 @@ class cli2zoombie extends JApplicationCli {
 
 
         //
-        JLog::add('Finished cli2zoombie run.');
-        echo ('Finished cli2zoombie run.') . "\n";
+
+
+        $this->sendNotice($tasks);
+        $this->setZoombieSystem();
+        $task_time = round(microtime(true) - $this->task_i_time, 3);
+        JLog::add('Zoombie task dead in ' . $task_time);
+        echo ('Finished cli2zoombie run in ') . $task_time . "\n";
+        //JLog::add('Finished cli2zoombie run.');
+    }
+
+    protected function sendNotice($tasks) {
+        $config = & JFactory::getConfig();
+        $task_time = round(microtime(true) - $this->task_i_time, 3);
+        $now = &JFactory::getDate();
+        $now = $now->toUnix();
+        $fromemail = $config->getValue('config.mailfrom');
+
+        $sendfile = $this->sendfile;
+        $runned = (int) $this->runned;
+        $interval = (int) ($this->interval * 60);
+
+        $next = $interval + $now;
+        $toemail = $fromemail;
+
+        $subject = 'Zoombie Daemon : ' . $config->getValue('config.sitename');
+        $body = 'Runned task' . "\n\n";
+
+        $body .= "Task    #:" . ++$runned . "\n"
+                . "Task name:  Zoombie Daemon Task\n"
+                . "Runned   : " . date('d.m.Y, H:i:s', $now) . "\n"
+                . "Times    : " . $task_time . "\n"
+                . "Scheduled: " . date('d.m.Y, H:i:s', $next) . "\n";
+
+        $body.='-------------------' . "\n";
+
+        foreach ($tasks as $task) {
+
+            $body.= "Task    #: " . $task->id . "\n"
+                    . "Task name: " . $task->name . "\n"
+                    . "Runned   : " . date('d.m.Y, H:i:s', $now) . "\n"
+                    . "Times    : " . $task->durata . "\n"
+                    . "Scheduled: " . date('d.m.Y, H:i:s', $task->next) . "\n";
+            $body.='-------------------' . "\n";
+        }
+
+
+
+        $body.="\n" . 'Scheduled task' . "\n";
+
+        $next = $this->nextTask();
+        //var_dump($next);
+        foreach ($next as $task) {
+
+            //$body .= "\n\nTask: " . sprintf("[%15s]", $task->pname) . ' next: ' . date('d.m.Y, H:i:s', $task->next);
+            $body .= "\n\n Task #: " . sprintf("[%5s]", ++$task->runned) . ' ' . sprintf("%-15s", $task->pname) . ' ' . date('d.m.Y, H:i:s', $task->next);
+        }
+
+        $footer = "\n\n  Zoombie Task Scheduler Application 4 Joomla by  http://www.alikonweb.it \n";
+        $body = $body . $footer;
+
+        //Jexit($body);
+
+        $mailer = & JFactory::getMailer();
+        $mailer->setSender(array($fromemail, 'Zoombie Task event log'));
+        $mailer->addRecipient($toemail);
+        $mailer->setSubject($subject);
+        $mailer->setBody($body);
+        $date = JFactory::getDate()->format('Y-m-d');
+
+        $attachment = JPATH_SITE . DS . 'logs' . DS . 'cli2zoombie.' . $date . '.php';
+        if ((!empty($attachment)) && ($sendfile)) {
+            if (!file_exists($attachment) || !(is_file($attachment) || is_link($attachment))) {
+                JLog::add("The file " . $attachment . " does not exist, or it's not a file; no email sent");
+            } else {
+                JLog::add("-- Attaching File");
+                $mailer->addAttachment($attachment);
+            }
+        }
+
+        $mailer->IsHTML(false);
+
+        return $mailer->Send();
+    }
+
+    public function getZoombieSystem() {
+        $query = $this->dbo->getQuery(true);
+        // Get params of the zoombie plugin from the database.
+        $query->select('params')
+                ->from('#__extensions')
+                ->where('type = ' . $this->dbo->quote('plugin'))
+                ->where('folder = ' . $this->dbo->quote('system'))
+                ->where('element = ' . $this->dbo->quote('zoombie'))
+                ->where('enabled = 1');
+        $now = &JFactory::getDate();
+        $now = $now->toUnix();
+        // Push the query builder object into the database connector.
+        $this->dbo->setQuery($query);
+        $this->par = $this->dbo->loadObjectList();
+        //echo(var_dump($this->par[0]->params));
+        $params = new JRegistry;
+        $params->loadJSON($this->par[0]->params);
+        $this->sendfile = $params->get('sendfile', '1');
+        $this->runned = $params->get('runned', 0);
+        $this->interval = (int) ($params->get('interval', 5) );
+        $this->key = $params->get('key', '');
+        $this->cronmode = (int) $params->get('cronmode', '1');
+        $this->sendmail = $params->get('sendmail', '1');
+        $this->last_run = $now;
+        $this->taskfile = 'Secret Key';
+        $this->taskremove = 'Secret Key';
+        $this->durata = 0;
+
+        if ((int) $params->get('cronmode', 1) != 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function setZoombieSystem() {
+        jimport('joomla.registry.format');
+        $now = &JFactory::getDate();
+        $now = $now->toUnix();
+        $handler = &JRegistryFormat::getInstance('json');
+        $params = new JObject();
+        $params->set('cronmode', $this->cronmode);
+        $params->set('sendmail', $this->sendmail);
+        $params->set('sendfile', $this->sendfile);
+        $params->set('key', $this->key);
+        $params->set('interval', $this->interval);
+        $params->set('last_run', $now);
+        $params->set('taskfile', 'Secret Key');
+        $params->set('taskremove', 'Secret Key');
+        $durata = round(microtime(true) - $this->task_i_time, 3);
+        $params->set('durata', $durata);
+        $runned = (int) $this->runned;
+        $runned++;
+        $params->set('runned', $runned);
+        $params = $handler->objectToString($params, array());
+
+        $query = 'UPDATE #__extensions' .
+                ' SET params=' . $this->dbo->Quote($params) .
+                ' WHERE element = ' . $this->dbo->Quote('zoombie') .
+                ' AND folder = ' . $this->dbo->Quote('system') .
+                ' AND enabled >= 1' .
+                ' AND type =' . $this->dbo->Quote('plugin') .
+                ' AND state >= 0';
+        $this->dbo->setQuery($query);
+
+        //$db->query();
+
+        if (!$this->dbo->query()) {
+            jexit($this->dbo->getErrorMsg());
+            return false;
+        }
+    }
+
+    private function nextTask() {
+        $this->dbo = JFactory::getDBO();
+// Get the quey builder class from the database.
+        $query = $this->dbo->getQuery(true);
+
+        // Get a list of the zoombie plugins from the database.
+        $query->select('p.*')
+                ->from('#__extensions AS p')
+                ->where('p.enabled = 1')
+                ->where('p.type = ' . $this->dbo->quote('plugin'))
+                ->where('p.folder = ' . $this->dbo->quote('zoombie'))
+                ->order('p.ordering');
+
+        // Push the query builder object into the database connector.
+        $this->dbo->setQuery($query);
+
+        // Get all the returned rows from the query as an array of objects.
+        $plugins = $this->dbo->loadObjectList();
+
+        $items = array();
+        foreach ($plugins as $plugin) {
+            $params = new JRegistry;
+            $params->loadJSON($plugin->params);
+            $now = &JFactory::getDate();
+            $now = $now->toUnix();
+            $interval = (int) ($params->get('interval', 5) * 60);
+            $runned = (int) $params->get('runned', 0);
+
+            $data = new stdClass();
+            $data->pid = $plugin->extension_id;
+            $data->pname = $plugin->element;
+            $data->last = $params->get('last_run');
+            $data->next = $interval + $params->get('last_run');
+            $data->runned = $runned;
+            $data->durata = $params->get('durata');
+
+            //var_dump($data);
+            $items[] = $data;
+        }
+        usort($items, array("Cli2Zoombie", "mysort"));
+        // var_dump($items);
+        return $items;
+    }
+
+    function mysort($a, $b) {
+        if ($a->next == $b->next) {
+            return 0;
+        }
+        return ($a->next < $b->next) ? -1 : 1;
     }
 
 }

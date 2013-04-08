@@ -44,17 +44,11 @@ require_once JPATH_LIBRARIES . '/import.php';
 // Bootstrap the CMS libraries.
 require_once JPATH_LIBRARIES . '/cms.php';
 jimport('joomla.database.database');
-
 jimport('joomla.application.input');
-
 jimport('joomla.event.dispatcher');
-
 jimport('joomla.application.input');
-
 jimport('joomla.event.dispatcher');
-
 jimport('joomla.environment.response');
-
 jimport('joomla.log.log');
 
 
@@ -91,7 +85,7 @@ class Cron2Zoombie {
     var $sendfile = null;
     var $runned = null;
     var $interval = null;
-
+    var $task_i_time=null;
     /**
      * Class constructor.
      *
@@ -103,6 +97,7 @@ class Cron2Zoombie {
      * @throws  JDatabaseException
      */
     public function __construct() {
+     
         // Call the parent __construct method so it bootstraps the application class.
         //   parent::__construct();
         $this->app = JFactory::getApplication('site');
@@ -123,6 +118,7 @@ class Cron2Zoombie {
                 array(
             // Set the name of the log file.
             'text_file' => 'cli2zoombie.' . $date . '.php',
+			
                 // Set the path for log files.
                 //    'text_file_path' => __DIR__ . '/logs'
                 ), JLog::INFO
@@ -181,7 +177,7 @@ class Cron2Zoombie {
      * @since   11.3
      */
     public function doExecute() {
-        //
+        $this->task_i_time = microtime(true);
         // Check if we have some critical information.
         // and get Zoombie system plugin parameters
         // $this->getZoombieSystem();
@@ -349,7 +345,7 @@ class Cron2Zoombie {
                     $task->next = $interval + $now;
 
                     $tasks[] = $task;
-                    echo($plugin->element . ' just runned ' . date('H:i:s, d.m.Y', $now)) . "\n";
+                    echo $plugin->element . ' just runned in ' . $durata . "\n";
                 } else {
                     JLog::add($plugin->element . ' no ACL to run');
                     echo($plugin->element . ' no ACL to run');
@@ -373,8 +369,10 @@ class Cron2Zoombie {
 
         $this->sendNotice($tasks);
         $this->setZoombieSystem();
-        echo ('Finished cli2zoombie run.') . "\n";
-        JLog::add('Finished cli2zoombie run.');
+        $task_time = round(microtime(true) - $this->task_i_time, 3);
+        JLog::add('Zoombie task dead in ' . $task_time);
+        echo ('Finished cli2zoombie run in ').$task_time . "\n";
+        //JLog::add('Finished cli2zoombie run.');
     }
 
     protected function sendNotice($tasks) {

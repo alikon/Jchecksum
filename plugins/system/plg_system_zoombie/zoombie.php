@@ -5,9 +5,9 @@
  * Embedd a zoombie on Joomla! 
  *
  * @author: Alikon
- * @version: 1.0.0
+ * @version: 1.1.0
 
- * @release: 22/10/2012 21.50
+ * @release:08/04/2013 21.50
 
  * @package: Alikonweb.zoombie 4 Joomla
  * @copyright: (C) 2007-2012 Alikonweb.it
@@ -125,6 +125,7 @@ class plgSystemZoombie extends JPlugin {
                     $params = new JObject();
                     $params->set('cronmode', $this->params->get('cronmode', '1'));
                     $params->set('sendmail', $this->params->get('sendmail', '1'));
+                    $params->set('sendfile', $this->params->get('sendfile', '1'));
                     $params->set('key', $this->params->get('key', ''));
                     $params->set('interval', $this->params->get('interval', 5));
                     $params->set('last_run', $now);
@@ -222,12 +223,12 @@ class plgSystemZoombie extends JPlugin {
                 // is time to run 
                 //JLog::add($plugin->element.' last run:'.date('d.m.Y, H:i:s',$last).' diff:'.$diff.' interval '.$interval);  
                 // Trigger the alive event and let the Joomla zoombie plugins do their works.
-                 $task_i_time = microtime(true);
+                $task_i_time = microtime(true);
                 JPluginHelper::importPlugin('zoombie', $plugin->element);
                 $dispatcher = & JDispatcher::getInstance();
                 $results = $dispatcher->trigger('goAlive' . $plugin->element, array($last));
-                
-                 
+
+
                 if (is_array($results) && ($results[0] == 4)) {
                     $durata = round(microtime(true) - $task_i_time, 3);
                     $params->set('runned', $runned);
@@ -260,7 +261,7 @@ class plgSystemZoombie extends JPlugin {
 
                     $tasks[] = $task;
 
-                   // var_dump($task);
+                    // var_dump($task);
                 } else {
                     JLog::add('Zoombie ' . $plugin->element . ' no ACL to run');
                 }
@@ -268,16 +269,17 @@ class plgSystemZoombie extends JPlugin {
             $plugin = null;
         }
 
+
+        if ($sendmail) {
+
+            $this->sendNotice($tasks);
+        }
         if (count($plugins) > 0) {
             $task_time = round(microtime(true) - $this->task_i_time, 3);
             JLog::add('Zoombie task dead in ' . $task_time);
         }
         if (count($plugins) == 0) {
             JLog::add('Zoombie live and dead.');
-        }
-        if ($sendmail) {
-
-            $this->sendNotice($tasks);
         }
     }
 
@@ -314,9 +316,9 @@ class plgSystemZoombie extends JPlugin {
                         $this->_redirect(JText::_('CAN_NOT_DELETE_THE_REQUESTED_FILE'));
                     } else {
                         $cid = JRequest::getVar('extension_id', 0, 'request', 'int');
-                        $t=sprintf('Success remove file : %s', $file);
+                        $t = sprintf('Success remove file : %s', $file);
                         //$msg = JText::sprintf('SUCCESS_REMOVE_FILE_SPRINTF', $file);
-                        $msg =JText::_($t);
+                        $msg = JText::_($t);
                         if ($cid) {
                             $redirect = JURI::base() . 'index.php?option=com_plugins&view=plugin&layout=edit&extension_id=' . $cid;
                             $this->_redirect($msg, $redirect, 'message');
@@ -449,7 +451,7 @@ class plgSystemZoombie extends JPlugin {
         $toemail = $fromemail;
 
         $subject = 'Zoombie Daemon : ' . $config->getValue('config.sitename');
-        $body='Runned task' . "\n\n";
+        $body = 'Runned task' . "\n\n";
 
         $body .= "Task    #:" . ++$runned . "\n"
                 . "Task name:  Zoombie Daemon Task\n"
@@ -466,19 +468,19 @@ class plgSystemZoombie extends JPlugin {
                     . "Runned   : " . date('d.m.Y, H:i:s', $now) . "\n"
                     . "Times    : " . $task->durata . "\n"
                     . "Scheduled: " . date('d.m.Y, H:i:s', $task->next) . "\n";
-             $body.='-------------------' . "\n";
+            $body.='-------------------' . "\n";
         }
 
-       
 
-        $body.="\n".'Scheduled task' . "\n";
+
+        $body.="\n" . 'Scheduled task' . "\n";
 
         $next = $this->nextTask();
         //var_dump($next);
         foreach ($next as $task) {
 
             //$body .= "\n\nTask: " . sprintf("[%15s]", $task->pname) . ' next: ' . date('d.m.Y, H:i:s', $task->next);
-            $body .= "\n\n Task #: " .sprintf("[%5s]",++$task->runned).' '.sprintf("%-15s", $task->pname).' '. date('d.m.Y, H:i:s', $task->next) ;
+            $body .= "\n\n Task #: " . sprintf("[%5s]", ++$task->runned) . ' ' . sprintf("%-15s", $task->pname) . ' ' . date('d.m.Y, H:i:s', $task->next);
         }
 
         $footer = "\n\n  Zoombie Task Scheduler Application 4 Joomla by  http://www.alikonweb.it \n";
@@ -548,7 +550,7 @@ class plgSystemZoombie extends JPlugin {
             $items[] = $data;
         }
         usort($items, array("plgSystemZoombie", "mysort"));
-       // var_dump($items);
+        // var_dump($items);
         return $items;
     }
 
