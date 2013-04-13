@@ -7,7 +7,7 @@
     <authorUrl>http://www.alikonweb.it</authorUrl>
     <copyright>Copyright (C) 2012 Alikonweb</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <description>PLG_SYSTEM_ZOOMBIE_4_JOOMLA_XML_DESCRIPTION</description>
     <files>
         <filename plugin="zoombie">zoombie.php</filename>

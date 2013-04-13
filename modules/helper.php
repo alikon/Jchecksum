@@ -1,8 +1,13 @@
 <?php
 
 /**
- * @copyright	Copyright (C) 2005 - 2013 Alikonweb.it, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @author:  Alikon
+ * @version:  1.1.1
+ * @release:  11/04/2013 21.50
+ * @package:  Alikonweb.zoombie 4 Joomla
+ * @copyright: (C) 2007-2013 Alikonweb.it
+ * @license:  http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link:     http://www.alikonweb.it
  */
 defined('_JEXEC') or die;
 
@@ -23,7 +28,7 @@ abstract class modZoombieHelper {
     public static function getList($params) {
 
         // Initialise variables
-        $db = &JFactory::getDbo();
+        $db = JFactory::getDbo();
         // Get the quey builder class from the database.
         $query = $db->getQuery(true);
 
@@ -45,7 +50,7 @@ abstract class modZoombieHelper {
         foreach ($plugins as $plugin) {
             $params = new JRegistry;
             $params->loadJSON($plugin->params);
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $runned  = (int) $params->get('runned', 0);
@@ -155,7 +160,7 @@ abstract class modZoombieHelper {
         return $items;
     }
   
-      public function mysort($a, $b) {
+      static function mysort($a, $b) {
         if ($a->next == $b->next) {
             return 0;
         }

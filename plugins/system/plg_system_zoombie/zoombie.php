@@ -4,15 +4,13 @@
  * Zoombie pseudo cron plugin
  * Embedd a zoombie on Joomla! 
  *
- * @author: Alikon
- * @version: 1.1.0
-
- * @release:08/04/2013 21.50
-
- * @package: Alikonweb.zoombie 4 Joomla
- * @copyright: (C) 2007-2012 Alikonweb.it
- * @license: http://www.gnu.org/copyleft/gpl.html GNU/GPL
- *
+ * @author:  Alikon
+ * @version:  1.1.1
+ * @release:  11/04/2013 21.50
+ * @package:  Alikonweb.zoombie 4 Joomla
+ * @copyright: (C) 2007-2013 Alikonweb.it
+ * @license:  http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link:     http://www.alikonweb.it
  *
  *
  * */
@@ -36,7 +34,7 @@ class plgSystemZoombie extends JPlugin {
     }
 
     public function onAfterInitialise() {
-        $app = &JFactory::getApplication();
+        $app = JFactory::getApplication();
         if ($app->isAdmin()) {
             $this->_removeFile();
             $this->_getFile();
@@ -45,7 +43,7 @@ class plgSystemZoombie extends JPlugin {
 
     //function onAfterRoute()
     function onAfterDispatch() {
-        $app = &JFactory::getApplication();
+        $app = JFactory::getApplication();
         if ($app->isAdmin()) {
             return;
         }
@@ -86,7 +84,7 @@ class plgSystemZoombie extends JPlugin {
             //$log = JLog::addLogger($options,JLog::INFO);
 
 
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
 
 
@@ -103,7 +101,7 @@ class plgSystemZoombie extends JPlugin {
                 $fp = fopen(JPATH_SITE . "/plugins/system/zoombie/logs/lock.txt", "r+");
 
                 if (flock($fp, LOCK_EX | LOCK_NB)) { // do an exclusive lock
-                    $document = & JFactory::getDocument();
+                    $document =  JFactory::getDocument();
 
 
 
@@ -201,7 +199,7 @@ class plgSystemZoombie extends JPlugin {
             // "item" should not be present.
             //(var_dump($plugin->params));
             $params->loadJSON($plugin->params);
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $old_interval = $params->get('interval', 5);
@@ -336,7 +334,7 @@ class plgSystemZoombie extends JPlugin {
     }
 
     protected function _redirect($msg, $redirect = 'index.php', $type = 'error') {
-        $mainframe = & JFactory::getApplication();
+        $mainframe =  JFactory::getApplication();
         $mainframe->enqueueMessage($msg, $type);
         $mainframe->redirect($redirect);
         exit;
@@ -349,7 +347,7 @@ class plgSystemZoombie extends JPlugin {
         }
 
         $token = trim($params->get($name));
-        $config = & JFactory::getConfig();
+        $config =  JFactory::getConfig();
         $email = $config->getValue('config.mailfrom');
         $db = $config->getValue('config.db');
         // jexit(	var_dump('secer1'.$token));		
@@ -439,9 +437,9 @@ class plgSystemZoombie extends JPlugin {
 
     protected function sendNotice($tasks) {
 
-        $config = & JFactory::getConfig();
+        $config =  JFactory::getConfig();
         $task_time = round(microtime(true) - $this->task_i_time, 3);
-        $now = &JFactory::getDate();
+        $now = JFactory::getDate();
         $now = $now->toUnix();
         $fromemail = $config->getValue('config.mailfrom');
         $sendfile = $this->params->get('sendfile', false);
@@ -488,7 +486,7 @@ class plgSystemZoombie extends JPlugin {
 
         //Jexit($body);
 
-        $mailer = & JFactory::getMailer();
+        $mailer =  JFactory::getMailer();
         $mailer->setSender(array($fromemail, 'Zoombie Task event log'));
         $mailer->addRecipient($toemail);
         $mailer->setSubject($subject);
@@ -533,7 +531,7 @@ class plgSystemZoombie extends JPlugin {
         foreach ($plugins as $plugin) {
             $params = new JRegistry;
             $params->loadJSON($plugin->params);
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $runned = (int) $params->get('runned', 0);
@@ -554,7 +552,7 @@ class plgSystemZoombie extends JPlugin {
         return $items;
     }
 
-    function mysort($a, $b) {
+    static function mysort($a, $b) {
         if ($a->next == $b->next) {
             return 0;
         }

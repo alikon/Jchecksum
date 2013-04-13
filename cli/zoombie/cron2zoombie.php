@@ -1,7 +1,15 @@
 #!/usr/bin/php
 <?php
 /**
- * An example command line application built on the Joomla Platform.
+ * @author:   Alikon
+ * @version:  1.1.1
+ * @release:  11/04/2013 21.50
+ * @package:  Alikonweb.zoombie 4 Joomla
+ * @copyright: (C) 2007-2013 Alikonweb.it
+ * @license:  http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link:     http://www.alikonweb.it
+ * 
+ * command line application built on the Joomla Platform.
  *
  * To run this example, adjust the executable path above to suite your operating system,
  * make this file executable and run the file.
@@ -244,7 +252,7 @@ class Cron2Zoombie {
             // "item" should not be present.
             //(var_dump($plugin->params));
             $params->loadJSON($plugin->params);
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $old_interval = $params->get('interval', 5);
@@ -376,9 +384,9 @@ class Cron2Zoombie {
     }
 
     protected function sendNotice($tasks) {
-        $config = & JFactory::getConfig();
+        $config = JFactory::getConfig();
         $task_time = round(microtime(true) - $this->task_i_time, 3);
-        $now = &JFactory::getDate();
+        $now = JFactory::getDate();
         $now = $now->toUnix();
         $fromemail = $config->getValue('config.mailfrom');
         
@@ -427,7 +435,7 @@ class Cron2Zoombie {
 
         //Jexit($body);
 
-        $mailer = & JFactory::getMailer();
+        $mailer = JFactory::getMailer();
         $mailer->setSender(array($fromemail, 'Zoombie Task event log'));
         $mailer->addRecipient($toemail);
         $mailer->setSubject($subject);
@@ -459,7 +467,7 @@ class Cron2Zoombie {
                 ->where('folder = ' . $this->dbo->quote('system'))
                 ->where('element = ' . $this->dbo->quote('zoombie'))
                 ->where('enabled = 1');
-        $now = &JFactory::getDate();
+        $now = JFactory::getDate();
         $now = $now->toUnix();
         // Push the query builder object into the database connector.
         $this->dbo->setQuery($query);
@@ -487,7 +495,7 @@ class Cron2Zoombie {
 
     public function setZoombieSystem() {
         jimport('joomla.registry.format');
-        $now = &JFactory::getDate();
+        $now = JFactory::getDate();
         $now = $now->toUnix();
         $handler = &JRegistryFormat::getInstance('json');
         $params = new JObject();
@@ -546,7 +554,7 @@ class Cron2Zoombie {
         foreach ($plugins as $plugin) {
             $params = new JRegistry;
             $params->loadJSON($plugin->params);
-            $now = &JFactory::getDate();
+            $now = JFactory::getDate();
             $now = $now->toUnix();
             $interval = (int) ($params->get('interval', 5) * 60);
             $runned = (int) $params->get('runned', 0);

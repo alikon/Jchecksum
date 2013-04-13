@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="zoombie" method="upgrade" client="site">
+    <name>Zoombie - DBBackup</name>
+    <author>alikon</author>
+    <creationDate>April 2013</creationDate>
+    <authorEmail>info@alikonweb.it</authorEmail>
+    <authorUrl>http://www.alikonweb.it</authorUrl>
+    <copyright>Copyright (C) 2012 Alikonweb</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>1.1.1</version>
+    <description>PLG_ZOOMBIE_DBBACKUP_4_JOOMLA_XML_DESCRIPTION</description>
+  
+    <files>
+        <filename plugin="dbbackup">dbbackup.php</filename>
+        <filename>index.html</filename>
+        <folder>elements</folder>
+        <folder writable="yes">backup</folder>
+    </files>
+    <languages>
+        <language tag="en-GB" client="site">language/en-GB/en-GB.plg_zoombie_dbbackup.ini</language>
+        <language tag="en-GB">language/en-GB/en-GB.plg_zoombie_dbbackup.sys.ini</language>
+    </languages>
+    <config>
+ 
+        <fields name="params" addfieldpath="/plugins/zoombie/dbbackup/elements">
+            <fieldset name="Basic" label="Basic">
+                <field name="last_run" type="hidden" default="1352101719" label="Admin advise" description="Send email to Admin on spam ">
+                </field>
+                <field name="interval" type="list" default="1440" label="Schedule" description="Set when go alive and run db backup task">
+                    <option value="5" > 5 min</option>
+                    <option value="10" >10 min</option>
+                    <option value="20" >20 min</option>
+                    <option value="30" >30 min</option>
+                    <option value="60" > 1 hour</option>
+                    <option value="120" > 2 hours</option>
+                    <option value="180" > 3 hours</option>
+                    <option value="240" > 4 hours</option>
+                    <option value="360" > 6 hours</option>
+                    <option value="720" > 12 hours</option>
+                    <option value="1440" selected="selected" > 24 hours</option>			
+                    <option value="2880" > 2 days</option>
+                    <option value="10080" > 1 week</option>
+                    <option value="20160" > 2 weeks</option>
+                    <option value="40320" > 1 month</option>
+                    <option value="80640" > 2 month</option>
+                    <option value="120960" > 3 month</option>
+                    <option value="161280" > 4 month</option>
+                    <option value="241920" > 6 month</option>
+                    <option value="483840" > 1 year</option>
+                </field>               
+                <field name="tables" type="dbtables" default='*' multiple="true" label="Select a table" />
+                
+                <field name="sendmail" type="radio" label="Mail" default="0" description="Send mail when zoombie alive" >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="sendfile" type="radio" label="Attach" default="0" description="Attach backup to email " >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="runned" type="hidden" default="0" label="runned" description="number of runned task" />	
+                <field name="durata" type="hidden" default="0" label="durata" description="runned task times" />	
+            </fieldset>
+            <fieldset name="Backup" label="Backup">
+                <field name="filelinks" type="filelink" size="60" maxlength="100" readonly="true" label="Download" description="Download backup" />
+                <field name="taskfile" type="hidden" size="30" readonly="true" label="SECRET_KEY_FOR_DOWNLOAD" default="Secret Key" description="SECRET_KEY_FOR_DOWNLOAD_DESC" />
+                <field name="taskremove" type="hidden" size="30" readonly="true" label="SECRET_KEY_FOR_REMOVE" default="Secret Key" description="SECRET_KEY_FOR_REMOVE_DESC" />               
+            </fieldset>
+        </fields>
+    </config>
+    <updateservers>
+        <server type="extension" priority="1" name="Zoombie - DBBackup">http://www.joomladdons.eu/update/plg_zoombie_dbbackup_update.xml</server>
+    </updateservers>
+</extension>

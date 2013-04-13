@@ -1,14 +1,18 @@
 <?php
 /**
- * @package		Joomla.Administrator
- * @copyright	Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
- * @license		GNU General Public License version 2 or later; see LICENSE.txt
+ * @author:  Alikon
+ * @version:  1.1.1
+ * @release:  11/04/2013 21.50
+ * @package:  Alikonweb.zoombie 4 Joomla
+ * @copyright: (C) 2007-2013 Alikonweb.it
+ * @license:  http://www.gnu.org/copyleft/gpl.html GNU/GPL
+ * @link:     http://www.alikonweb.it
  */
 
 // No direct access.
 defined('_JEXEC') or die;
 
-// Include the mod_popular functions only once.
+// Include the mod_zoombie functions only once.
 require_once dirname(__FILE__).'/helper.php';
 
 // Get module data.

@@ -11,7 +11,7 @@
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>info@alikonweb.it</authorEmail>
 	<authorUrl>www.alikonweb.it</authorUrl>
-	<version>1.0.0</version>
+	<version>1.1.1</version>
 	<description>MOD_ZOOMBIE_XML_DESCRIPTION</description>
 	<files>
 		<filename module="mod_zoombie">mod_zoombie.php</filename>
