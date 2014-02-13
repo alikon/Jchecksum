@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2.5" type="plugin" group="system" method="upgrade" client="site">
+    <name>System - Article Responsive Preview</name>
+    <author>alikon</author>
+    <creationDate>August 2013</creationDate>
+    <authorEmail>info@alikonweb.it</authorEmail>
+    <authorUrl>http://www.alikonweb.it</authorUrl>
+    <copyright>Copyright (C) 2013 Alikonweb</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>1.0.0</version>
+    <description>PLG_SYSTEM_ARTICLE_RESPONSIVE_PREVIEW_4_JOOMLA_XML_DESCRIPTION</description>
+
+
+	<files>
+		<filename plugin="article_responsive_preview">article_responsive_preview.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/en-GB.plg_system_article_responsive_preview.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_system_article_responsive_preview.sys.ini</language>
+	
+	</languages>
+	<config>
+	<fields name="params">
+		<fieldset name="basic">
+		
+						<field
+					name="iphone_portrait"
+					type="radio"
+					default="0"
+					label="iphone portrait"
+					description="iphone portrait">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>
+        <field
+					name="iphone_landscape"
+					type="radio"
+					default="0"
+					label="iphone landscape"
+					description="iphone landscape">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>
+				<field
+					name="iphone_5_portrait"
+					type="radio"
+					default="0"
+					label="iphone 5 portrait"
+					description="iphone 5 portrait">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>
+        <field
+					name="iphone_5_landscape"
+					type="radio"
+					default="0"
+					label="iphone 5 landscape"
+					description="iphone 5 landscape">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>	
+				<field
+					name="android_240x320_portrait"
+					type="radio"
+					default="0"
+					label="android 240x320 portrait"
+					description="android 240x320 portrait">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>
+        <field
+					name="android_240x320_landscape"
+					type="radio"
+					default="0"
+					label="android 240x320 landscape"
+					description="android 240x320 landscape">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>	
+				<field
+					name="android_380x685_portrait"
+					type="radio"
+					default="0"
+					label="android 380x685 portrait"
+					description="android 380x685 portrait">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>	
+				<field
+					name="android_685x380_landscape"
+					type="radio"
+					default="0"
+					label="android 685x380 landscape"
+					description="android 85x380 landscape">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>	
+				<field
+					name="ipad_portrait"
+					type="radio"
+					default="0"
+					label="ipad portrait"
+					description="ipad portrait">
+					<option
+						value="1">JSHOW</option>
+					<option
+						value="0">JHIDE</option>
+				</field>
+		</fieldset>
+	</fields>
+	    <updateservers>
+        <server type="extension" priority="1" name="System - Article Responsive Preview">http://www.joomladdons.eu/update/plg_system_articleresponsivepreview.xml</server>
+    </updateservers>
+	</config>
+</extension>
