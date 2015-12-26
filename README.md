@@ -48,4 +48,4 @@ the little zoombies
   
  - Link Checker
  
- [![ghit.me](https://ghit.me/badge.svg?repo=alikon/joomla-cms)](https://ghit.me/repo/alikon/joomla-cms)
+[![ghit.me](https://ghit.me/badge.svg?repo=alikon/Jchecksum)](https://ghit.me/repo/alikon/Jchecksum)
